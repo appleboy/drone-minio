@@ -1,3 +1,7 @@
+workspace:
+  base: /go/src
+  path: github.com/appleboy/drone-minio
+
 clone:
   git:
     image: plugins/git

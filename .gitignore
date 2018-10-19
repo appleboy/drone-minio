@@ -12,3 +12,4 @@
 *.out
 
 drone-minio
+coverage.txt
