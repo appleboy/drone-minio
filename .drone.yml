@@ -12,10 +12,30 @@ pipeline:
   lint:
     image: golang:1.11
     pull: true
+    group: testing
     commands:
       - make vet
       - make lint
+
+  misspell:
+    image: golang:1.11
+    pull: true
+    group: testing
+    commands:
       - make misspell-check
+
+  vendor:
+    image: golang:1.11
+    pull: true
+    group: testing
+    commands:
+      - make test-vendor
+
+  test:
+    image: golang:1.11
+    pull: true
+    group: testing
+    commands:
       - make test
 
   codecov:

@@ -14,6 +14,7 @@ SOURCES ?= $(shell find . -name "*.go" -type f)
 TAGS ?=
 LDFLAGS ?= -X 'main.Version=$(VERSION)' -X 'main.BuildNum=$(DRONE_BUILD_NUMBER)'
 TMPDIR := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'tempdir')
+GOVENDOR := $(GOPATH)/bin/govendor
 
 ifneq ($(shell uname), Darwin)
 	EXTLDFLAGS = -extldflags "-static" $(null)
@@ -34,6 +35,19 @@ fmt:
 
 vet:
 	$(GO) vet $(PACKAGES)
+
+$(GOVENDOR):
+	$(GO) get -u github.com/kardianos/govendor
+
+.PHONY: test-vendor
+test-vendor: $(GOVENDOR)
+	$(GOVENDOR) list +unused | tee "$(TMPDIR)/wc-gitea-unused"
+	[ $$(cat "$(TMPDIR)/wc-gitea-unused" | wc -l) -eq 0 ] || echo "Warning: /!\\ Some vendor are not used /!\\"
+
+	$(GOVENDOR) list +outside | tee "$(TMPDIR)/wc-gitea-outside"
+	[ $$(cat "$(TMPDIR)/wc-gitea-outside" | wc -l) -eq 0 ] || exit 1
+
+	$(GOVENDOR) status || exit 1
 
 errcheck:
 	@which errcheck > /dev/null; if [ $$? -ne 0 ]; then \
