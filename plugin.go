@@ -8,18 +8,31 @@ import (
 	"strings"
 )
 
+const ALIAS = "minio"
+
 type (
 	// Config for the plugin.
 	Config struct {
-		Actions   []string
-		Quiet     bool
-		NoColor   bool
-		Debug     bool
-		JSON      bool
-		Insecure  bool
-		URL       string
-		AccessKey string
-		SecretKey string
+		Actions    []string
+		IsQuiet    bool
+		IsNoColor  bool
+		IsDebug    bool
+		IsJSON     bool
+		IsInsecure bool
+		URL        string
+		AccessKey  string
+		SecretKey  string
+
+		// rm flag
+		IsForce      bool
+		IsRecursive  bool
+		IsDangerous  bool
+		IsFake       bool
+		IsIncomplete bool
+		EncryptKey   string
+		OlderThan    int
+		NewerThan    int
+		Path         string
 	}
 
 	// Plugin values
@@ -41,6 +54,8 @@ func (p *Plugin) Exec() error {
 	// Add commands listed from Actions
 	for _, action := range p.Config.Actions {
 		switch action {
+		case "rm":
+			commands = append(commands, p.rmCommand())
 		default:
 			return fmt.Errorf("valid actions are: rm, cp. You provided %s", action)
 		}
@@ -61,12 +76,57 @@ func (p *Plugin) Exec() error {
 	return nil
 }
 
+func (p *Plugin) rmCommand() *exec.Cmd {
+	args := []string{
+		"rm",
+	}
+
+	if p.Config.IsRecursive {
+		args = append(args, "--recursive")
+	}
+
+	if p.Config.IsIncomplete {
+		args = append(args, "--incomplete")
+	}
+
+	if p.Config.IsFake {
+		args = append(args, "--fake")
+	}
+
+	if p.Config.IsDangerous {
+		args = append(args, "--dangerous")
+	}
+
+	if p.Config.IsForce {
+		args = append(args, "--force")
+	}
+
+	if p.Config.OlderThan != 0 {
+		args = append(args, "--older-than", fmt.Sprintf("%d", p.Config.OlderThan))
+	}
+
+	if p.Config.NewerThan != 0 {
+		args = append(args, "--newer-than", fmt.Sprintf("%d", p.Config.NewerThan))
+	}
+
+	if p.Config.EncryptKey != "" {
+		args = append(args, "--encrypt-key", `"`+p.Config.EncryptKey+`"`)
+	}
+
+	args = append(args, ALIAS+"/"+strings.TrimLeft(p.Config.Path, "/"))
+
+	return exec.Command(
+		"mc",
+		args...,
+	)
+}
+
 func (p *Plugin) addConfigCommand() *exec.Cmd {
 	args := []string{
 		"config",
 		"host",
 		"add",
-		"minio",
+		ALIAS,
 		p.Config.URL,
 		p.Config.AccessKey,
 		p.Config.SecretKey,

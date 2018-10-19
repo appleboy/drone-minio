@@ -64,6 +64,53 @@ func main() {
 			Usage:  "s3 secret key",
 			EnvVar: "PLUGIN_SECRET_KEY",
 		},
+
+		// rm specific flags.
+		cli.BoolFlag{
+			Name:   "recursive, r",
+			Usage:  "Remove recursively.",
+			EnvVar: "PLUGIN_RECURSIVE",
+		},
+		cli.BoolFlag{
+			Name:   "force",
+			Usage:  "Allow a recursive remove operation.",
+			EnvVar: "PLUGIN_FORCE",
+		},
+		cli.BoolFlag{
+			Name:   "dangerous",
+			Usage:  "Allow site-wide removal of buckets and objects.",
+			EnvVar: "PLUGIN_DANGEROUS",
+		},
+		cli.BoolFlag{
+			Name:   "incomplete, I",
+			Usage:  "Remove incomplete uploads.",
+			EnvVar: "PLUGIN_INCOMPLETE",
+		},
+		cli.BoolFlag{
+			Name:   "fake",
+			Usage:  "Perform a fake remove operation.",
+			EnvVar: "PLUGIN_FAKE",
+		},
+		cli.IntFlag{
+			Name:   "older-than",
+			Usage:  "Remove objects older than N days",
+			EnvVar: "PLUGIN_ORDER_THAN",
+		},
+		cli.IntFlag{
+			Name:   "newer-than",
+			Usage:  "Remove objects newer than N days",
+			EnvVar: "PLUGIN_NEWER_THAN",
+		},
+		cli.StringFlag{
+			Name:   "encrypt-key",
+			Usage:  "Encrypt object (using server-side encryption)",
+			EnvVar: "PLUGIN_ENCRYPT_KEY",
+		},
+		cli.StringFlag{
+			Name:   "path",
+			Usage:  "object path",
+			EnvVar: "PLUGIN_PATH",
+		},
 	}
 
 	app.Version = Version
@@ -88,15 +135,24 @@ func run(c *cli.Context) error {
 
 	plugin := Plugin{
 		Config: Config{
-			Actions:   c.StringSlice("actions"),
-			URL:       c.String("url"),
-			AccessKey: c.String("access-key"),
-			SecretKey: c.String("secret-key"),
-			Quiet:     c.Bool("quiet"),
-			NoColor:   c.Bool("no-color"),
-			Debug:     c.Bool("debug"),
-			JSON:      c.Bool("json"),
-			Insecure:  c.Bool("insecure"),
+			Actions:      c.StringSlice("actions"),
+			URL:          c.String("url"),
+			AccessKey:    c.String("access-key"),
+			SecretKey:    c.String("secret-key"),
+			IsQuiet:      c.Bool("quiet"),
+			IsNoColor:    c.Bool("no-color"),
+			IsDebug:      c.Bool("debug"),
+			IsJSON:       c.Bool("json"),
+			IsInsecure:   c.Bool("insecure"),
+			IsForce:      c.Bool("force"),
+			IsRecursive:  c.Bool("recursive"),
+			IsDangerous:  c.Bool("dangerous"),
+			IsIncomplete: c.Bool("incomplete"),
+			EncryptKey:   c.String("encrypt-key"),
+			OlderThan:    c.Int("older-than"),
+			NewerThan:    c.Int("newer-than"),
+			IsFake:       c.Bool("fake"),
+			Path:         c.String("path"),
 		},
 	}
 
