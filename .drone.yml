@@ -32,6 +32,8 @@ pipeline:
     image: golang:1.11
     pull: true
     group: build
+    environment:
+      GO111MODULE: "on"
     commands:
       - make build_linux_amd64
 
@@ -39,6 +41,8 @@ pipeline:
     image: golang:1.11
     pull: true
     group: build
+    environment:
+      GO111MODULE: "on"
     commands:
       - make build_linux_i386
 
@@ -46,6 +50,8 @@ pipeline:
     image: golang:1.11
     pull: true
     group: build
+    environment:
+      GO111MODULE: "on"
     commands:
       - make build_linux_arm64
 
@@ -53,6 +59,8 @@ pipeline:
     image: golang:1.11
     pull: true
     group: build
+    environment:
+      GO111MODULE: "on"
     commands:
       - make build_linux_arm
 
