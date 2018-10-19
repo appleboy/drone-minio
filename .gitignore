@@ -15,4 +15,3 @@ drone-minio
 coverage.txt
 
 release/
-vendor/
