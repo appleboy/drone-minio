@@ -36,6 +36,7 @@ func (p *Plugin) Exec() error {
 
 	commands := []*exec.Cmd{
 		p.versionCommand(),
+		p.addConfigCommand(),
 	}
 	// Add commands listed from Actions
 	for _, action := range p.Config.Actions {
@@ -60,9 +61,26 @@ func (p *Plugin) Exec() error {
 	return nil
 }
 
+func (p *Plugin) addConfigCommand() *exec.Cmd {
+	args := []string{
+		"config",
+		"host",
+		"add",
+		"minio",
+		p.Config.URL,
+		p.Config.AccessKey,
+		p.Config.SecretKey,
+	}
+
+	return exec.Command(
+		"mc",
+		args...,
+	)
+}
+
 func (p *Plugin) versionCommand() *exec.Cmd {
 	args := []string{
-		"--version",
+		"version",
 	}
 
 	return exec.Command(
