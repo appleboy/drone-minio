@@ -1,0 +1,4 @@
+github.com/rs/zerolog v1.9.1 h1:AjV/SFRF0+gEa6rSjkh0Eji/DnkrJKVpPho6SW5g4mU=
+github.com/rs/zerolog v1.9.1/go.mod h1:YbFCdg8HfsridGWAh22vktObvhZbQsZXe4/zB0OKkWU=
+github.com/urfave/cli v1.20.0 h1:fDqGv3UG/4jbVl/QkFwEdddtEDjh/5Ov6X+0B/3bPaw=
+github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
