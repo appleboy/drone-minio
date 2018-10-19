@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// ALIAS s3 host alias
 const ALIAS = "minio"
 
 type (
