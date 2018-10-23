@@ -49,12 +49,6 @@ test-vendor: $(GOVENDOR)
 
 	$(GOVENDOR) status || exit 1
 
-errcheck:
-	@which errcheck > /dev/null; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/kisielk/errcheck; \
-	fi
-	errcheck $(PACKAGES)
-
 lint:
 	@which golint > /dev/null; if [ $$? -ne 0 ]; then \
 		$(GO) get -u golang.org/x/lint/golint; \
@@ -86,9 +80,6 @@ fmt-check:
 
 test: fmt-check
 	for PKG in $(PACKAGES); do $(GO) test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.txt $$PKG || exit 1; done;
-
-html:
-	$(GO) tool cover -html=coverage.txt
 
 install: $(SOURCES)
 	$(GO) install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'

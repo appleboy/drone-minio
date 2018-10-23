@@ -37,6 +37,7 @@ pipeline:
     group: testing
     commands:
       - make test
+      - make coverage
 
   codecov:
     image: robertstettner/drone-codecov
